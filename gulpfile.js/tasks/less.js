@@ -1,43 +1,36 @@
-var gulp = require('gulp');
-var config = require('../config');
-var size = require('gulp-size');
-var sourcemaps = require('gulp-sourcemaps');
-var rename = require('gulp-rename');
-var autoprefixer = require('gulp-autoprefixer');
-var less = require('gulp-less');
-var watchLess = require('gulp-watch-less');
-var minifyCss = require('gulp-minify-css');
+var config = require('../config'),
+    gulp = require('gulp'),
+
+    autoprefixer = require('gulp-autoprefixer'),
+    less = require('gulp-less'),
+    minifyCss = require('gulp-minify-css'),
+    rename = require('gulp-rename'),
+    sourcemaps = require('gulp-sourcemaps'),
+    watchLess = require('gulp-watch-less');
+
+var build = function(buildOnly)
+{
+	return ( buildOnly  ? gulp.src(config.less.source)
+						: watchLess(config.less.source) )
+		.pipe(sourcemaps.init())
+		.pipe(less())
+		.pipe(autoprefixer({
+			browsers: config.less.browsers
+		}))
+		.pipe(rename(config.less.filename))
+		.pipe(gulp.dest(config.less.dest))
+		.pipe(minifyCss())
+		.pipe(rename(config.less.filename.replace(/\.css$/,'.min.css')))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest(config.less.dest));
+}
 
 gulp.task('less',function(){
-	return gulp.src(config.less.source)
-		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(autoprefixer({
-			browsers: config.less.browsers
-		}))
-		.pipe(rename(config.less.filename))
-		.pipe(size({title:'CSS'}))
-		.pipe(gulp.dest(config.less.dest))
-		.pipe(minifyCss())
-		.pipe(rename(config.less.filename.replace(/\.css$/,'.min.css')))
-		.pipe(size({title:'CSS Minified'}))
-		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest(config.less.dest));
+	return build(true);
 });
 
-gulp.task('less-watch',function(){
-	return watchLess(config.less.source)
-		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(autoprefixer({
-			browsers: config.less.browsers
-		}))
-		.pipe(rename(config.less.filename))
-		.pipe(gulp.dest(config.less.dest))
-		.pipe(minifyCss())
-		.pipe(rename(config.less.filename.replace(/\.css$/,'.min.css')))
-		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest(config.less.dest));
+gulp.task('less-watch',['less'],function(){
+	return build();
 });
 
 module.exports = {

@@ -1,52 +1,49 @@
-var gulp = require('gulp');
-var config = require('../config');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var babelify = require('babelify');
-var size = require('gulp-size');
-var sourcemaps = require('gulp-sourcemaps');
-var rename = require('gulp-rename');
+var gulp = require('gulp'),
+    config = require('../config'),
+    babelify = require('babelify'),
+    browserify = require('browserify'),
+    buffer = require('vinyl-buffer'),
+    rename = require('gulp-rename'),
+    source = require('vinyl-source-stream'),
+    sourcemaps = require('gulp-sourcemaps'),
+    uglify = require('gulp-uglify'),
+    watchify = require('watchify');
 
-var bundle = function(watch){
+var build = function(buildOnly){
 	var bundler = browserify({
 		entries: config.browserify.source,
 	});
 
-	if (watch)
+	if (! buildOnly)
 		bundler = watchify(bundler);
 
 	bundler.transform(babelify, {
 		presets: config.babelify.presets,
 		ignore: /(bower_components)|(node_modules)/
 	});
-	var build = function() {
+	var bundle = function() {
 		return bundler.bundle()
 			.pipe(source(config.browserify.filename))
 			.pipe(buffer())
 			.pipe(gulp.dest(config.browserify.dest))
-			.pipe(size({title: 'JS'}))
 			.pipe(rename(config.browserify.filename.replace(/\.js$/, '.min.js')))
 			.pipe(sourcemaps.init({loadMaps: true}))
 			.pipe(uglify())
-			.pipe(size({title: 'JS Minified'}))
 			.pipe(sourcemaps.write('./'))
 			.pipe(gulp.dest(config.browserify.dest));
 	}
-	if (watch)
-		bundler.on('update',build);
-	return build();
+	if (! buildOnly)
+		bundler.on('update',bundle);
+	return bundle();
 }
 
 
 gulp.task('browserify', function() {
-	return bundle();
+	return build(true);
 });
 
-gulp.task('browserify-watch',function(){
-	return bundle(true);
+gulp.task('browserify-watch',['browserify'],function(){
+	return build();
 });
 
 module.exports = {

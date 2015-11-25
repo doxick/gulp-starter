@@ -11,15 +11,19 @@ module.exports = {
 	less: {
 		source: './src/less/main.less',
 		dest: './dist/css',
-		filename: 'style.css',
+		filename: 'style.css'
 	},
 	autoprefixer: {
 		browsers: ['> 1%']
 	},
 
 	html: {
-		source: './src/index.html',
-		dest: './dist/',
-		filename: 'index.html'
+		source: './src/**/*.html',
+		dest: './dist/'
+	},
+
+	images: {
+		source: './src/images/**/*.{jpg,jpeg,svg,gif,png}',
+		dest: './dist/images/'
 	}
 }

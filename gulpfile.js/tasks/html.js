@@ -1,16 +1,20 @@
-var gulp = require('gulp');
-var config = require('../config');
-var size = require('gulp-size');
-var rename = require('gulp-rename');
+var gulp = require('gulp'),
+    config = require('../config'),
+    watch = require('gulp-watch');
 
-gulp.task('html',function(){
-	return gulp.src(config.html.source)
-		.pipe(rename(config.html.filename))
+var build = function(buildOnly)
+{
+	return (buildOnly   ? gulp.src(config.html.source)
+						: watch(config.html.source) )
 		.pipe(gulp.dest(config.html.dest));
+}
+gulp.task('html',function(){
+	return build(true);
+	;
 });
 
-gulp.task('html-watch',function(){
-	return gulp.watch(config.html.source,['html'])
+gulp.task('html-watch',['html'],function(){
+	return build();
 });
 
 module.exports = {
