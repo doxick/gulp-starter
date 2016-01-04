@@ -15,7 +15,7 @@ var build = function(buildOnly)
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(autoprefixer({
-			browsers: config.less.browsers
+			browsers: config.autoprefixer.browsers
 		}))
 		.pipe(rename(config.less.filename))
 		.pipe(gulp.dest(config.less.dest))
