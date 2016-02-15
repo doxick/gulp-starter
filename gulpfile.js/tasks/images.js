@@ -6,24 +6,24 @@ var gulp = require('gulp'),
 
 var build = function(buildOnly)
 {
-	return (buildOnly   ? gulp.src(config.images.source)
-						: watch(config.images.source) )
-		.pipe(changed(config.images.dest))
-		.pipe(imagemin({
-			progressive: true,
-			optimizationLevel: 5
-		}))
-		.pipe(gulp.dest(config.images.dest));
+    return (buildOnly   ? gulp.src(config.images.source)
+        : watch(config.images.source) )
+        .pipe(changed(config.images.dest))
+        .pipe(imagemin({
+            progressive: true,
+            optimizationLevel: 5
+        }))
+        .pipe(gulp.dest(config.images.dest));
 }
 
 gulp.task('images', function() {
-	return build(true);
+    return build(true);
 });
 gulp.task('images-watch',['images'],function(){
-	return build();
+    return build();
 })
 
 module.exports = {
-	build: 'images',
-	watch: 'images-watch'
+    build: 'images',
+    watch: 'images-watch'
 }

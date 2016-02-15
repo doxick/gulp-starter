@@ -4,20 +4,20 @@ var gulp = require('gulp'),
 
 var build = function(buildOnly)
 {
-	return (buildOnly   ? gulp.src(config.html.source)
-						: watch(config.html.source) )
-		.pipe(gulp.dest(config.html.dest));
+    return (buildOnly   ? gulp.src(config.html.source)
+        : watch(config.html.source) )
+        .pipe(gulp.dest(config.html.dest));
 }
 gulp.task('html',function(){
-	return build(true);
-	;
+    return build(true);
+    ;
 });
 
 gulp.task('html-watch',['html'],function(){
-	return build();
+    return build();
 });
 
 module.exports = {
-	build: 'html',
-	watch: 'html-watch'
+    build: 'html',
+    watch: 'html-watch'
 };

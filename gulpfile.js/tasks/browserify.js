@@ -24,7 +24,7 @@ var bundle = function (bundler, filename) {
         .pipe(gulp.dest(config.browserify.dest));
     if (config.environment == 'production')
     {
-        bundle.pipe(rename({extname: '.min.js'}))
+        return bundle.pipe(rename({extname: '.min.js'}))
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(uglify())
             .pipe(sourcemaps.write('./'))
@@ -51,8 +51,7 @@ var build = function(callback, watchCallback){
         if (hasWatch)
         {
             bundler.on('update',function() {
-                bundle(bundler, file);
-                watchCallback();
+                bundle(bundler, file).on('end', watchCallback);
             });
             bundler.on('log',function(msg){
                 logger.info("{yellow:%s}: %s", filename, msg);
