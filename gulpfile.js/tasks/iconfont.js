@@ -6,22 +6,22 @@ var runTimestamp = Math.round(Date.now()/1000);
 
 var build = function()
 {
-    return gulp.src([config.iconfont.source])
+    return gulp.src([config.font.source])
         .pipe(iconfontCss({
-            fontName: config.iconfont.name,
-            path: config.iconfont.template,
-            targetPath: config.iconfont.destCss,
-            fontPath: config.iconfont.destInternal,
-            cssClass: config.iconfont.cssClass
+            fontName: config.font.name,
+            path: config.font.template,
+            targetPath: config.font.destCss,
+            fontPath: config.font.destInternal,
+            cssClass: config.font.cssClass
         }))
         .pipe(iconfont({
-            fontName: config.iconfont.name,
+            fontName: config.font.name,
             appendUnicode: true,
             formats: ['ttf', 'eot', 'woff', 'woff2','svg'],
             timestamp: runTimestamp,
-            normalize: config.iconfont.normalize
+            normalize: config.font.normalize
         }))
-        .pipe(gulp.dest(config.iconfont.dest));
+        .pipe(gulp.dest(config.font.dest));
 };
 
 gulp.task('font', function(){
@@ -29,10 +29,10 @@ gulp.task('font', function(){
 });
 
 gulp.task('font-watch',['font'],function(){
-    gulp.watch(config.iconfont.source,['font']);
+    gulp.watch(config.font.source,['font']);
 });
 
 module.exports = {
-    build: 'iconfont',
-    watch: 'iconfont-watch'
+    build: 'font',
+    watch: 'font-watch'
 };
